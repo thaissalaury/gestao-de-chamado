@@ -96,6 +96,84 @@ namespace GestaoChamados
             }
         }
 
+        private void BtnAbrir_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cbCliente.SelectedIndex < 0)
+                {
+                    MessageBox.Show("Por favor, selecione um cliente!", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cbCliente.Focus();
+                    return;
+                }
+
+                if (cbAtendente.SelectedIndex < 0)
+                {
+                    MessageBox.Show("Por favor, selecione um atendente!", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cbAtendente.Focus();
+                    return;
+                }
+
+                string descricao = txtDescricao.Text.Trim();
+                if (string.IsNullOrWhiteSpace(descricao))
+                {
+                    MessageBox.Show("Por favor, digite a descrição do chamado!", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtDescricao.Focus();
+                    return;
+                }
+
+                int clienteId = (int)cbCliente.SelectedValue;
+                int atendenteId = (int)cbAtendente.SelectedValue;
+                var cliente = clienteService.BuscarPorId(clienteId);
+                var atendente = atendenteService.BuscarPorId(atendenteId);
+
+                chamadoService.Abrir(cliente, atendente, descricao);
+                MessageBox.Show("Chamado aberto com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txtDescricao.Clear();
+                cbCliente.SelectedIndex = -1;
+                cbAtendente.SelectedIndex = -1;
+                CarregarChamados();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao abrir chamado: " + ex.Message, "Erro do Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CarregarClientes()
+        {
+            var clientes = clienteService.Listar();
+            cbCliente.DataSource = new List<Cliente>(clientes);
+            cbCliente.DisplayMember = "Nome";
+            cbCliente.ValueMember = "Id";
+            cbCliente.SelectedIndex = -1;
+        }
+
+        private void CarregarAtendentes()
+        {
+            var atendentes = atendenteService.Listar();
+            cbAtendente.DataSource = new List<Atendente>(atendentes);
+            cbAtendente.DisplayMember = "Nome";
+            cbAtendente.ValueMember = "Id";
+            cbAtendente.SelectedIndex = -1;
+        }
+
+        private void CarregarChamados()
+        {
+            dgvChamados.Rows.Clear();
+            foreach (var chamado in chamadoService.Listar())
+            {
+                dgvChamados.Rows.Add(
+                    chamado.Id,
+                    chamado.Cliente?.Nome ?? "N/A",
+                    chamado.Atendente?.Nome ?? "N/A",
+                    chamado.Descricao,
+                    chamado.Status.ToString(),
+                    chamado.DataAbertura.ToString("dd/MM/yyyy HH:mm")
+                );
+            }
+        }
+
         private void FiltrarChamados()
         {
             string termo = txtBusca.Text.ToLower();

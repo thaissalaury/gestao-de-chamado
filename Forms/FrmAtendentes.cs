@@ -53,21 +53,32 @@ namespace GestaoChamados
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(txtNome.Text) || string.IsNullOrWhiteSpace(txtSetor.Text))
+                string nome = txtNome.Text.Trim();
+                string setor = txtSetor.Text.Trim();
+
+                if (string.IsNullOrWhiteSpace(nome))
                 {
-                    MessageBox.Show("Preencha todos os campos!", "Validacao", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Por favor, insira o nome do atendente.", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNome.Focus();
                     return;
                 }
 
-                service.Cadastrar(txtNome.Text, txtSetor.Text);
-                MessageBox.Show("Atendente adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (string.IsNullOrWhiteSpace(setor))
+                {
+                    MessageBox.Show("Por favor, insira o setor do atendente.", "Campo Obrigatório", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtSetor.Focus();
+                    return;
+                }
+
+                service.Cadastrar(nome, setor);
+                MessageBox.Show("Atendente cadastrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtNome.Clear();
                 txtSetor.Clear();
                 CarregarAtendentes();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao cadastrar atendente: " + ex.Message, "Erro do Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
