@@ -13,6 +13,9 @@ namespace GestaoChamados
         private ComboBox cbCliente;
         private ComboBox cbAtendente;
         private TextBox txtDescricao;
+        private TextBox txtBusca;
+        private ComboBox cbStatus;
+        private Button btnAtualizarStatus;
 
         public FrmChamados()
         {
@@ -29,23 +32,34 @@ namespace GestaoChamados
             StartPosition = FormStartPosition.CenterParent;
             BackColor = Color.WhiteSmoke;
 
-            Panel pnlForm = new Panel { Dock = DockStyle.Top, Height = 160, BackColor = Color.LightGray, Padding = new Padding(15) };
+            Panel pnlForm = new Panel { Dock = DockStyle.Top, Height = 220, BackColor = Color.LightGray, Padding = new Padding(15) };
 
-            Label lblCliente = new Label { Text = "Cliente:", Location = new Point(15, 15), Width = 80, Font = new Font("Arial", 10) };
-            cbCliente = new ComboBox { Location = new Point(100, 15), Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
+            Label lblBusca = new Label { Text = "Buscar:", Location = new Point(15, 15), Width = 80, Font = new Font("Arial", 10) };
+            txtBusca = new TextBox { Location = new Point(100, 15), Width = 300, Height = 25 };
+            txtBusca.TextChanged += (s, e) => FiltrarChamados();
 
-            Label lblAtendente = new Label { Text = "Atendente:", Location = new Point(15, 55), Width = 80, Font = new Font("Arial", 10) };
-            cbAtendente = new ComboBox { Location = new Point(100, 55), Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
+            Label lblCliente = new Label { Text = "Cliente:", Location = new Point(15, 55), Width = 80, Font = new Font("Arial", 10) };
+            cbCliente = new ComboBox { Location = new Point(100, 55), Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
 
-            Label lblDescricao = new Label { Text = "Descricao:", Location = new Point(15, 95), Width = 80, Font = new Font("Arial", 10) };
-            txtDescricao = new TextBox { Location = new Point(100, 95), Width = 400, Height = 50, Multiline = true };
+            Label lblAtendente = new Label { Text = "Atendente:", Location = new Point(15, 95), Width = 80, Font = new Font("Arial", 10) };
+            cbAtendente = new ComboBox { Location = new Point(100, 95), Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
 
-            Button btnAbrir = new Button { Text = "Abrir Chamado", Location = new Point(100, 155), Width = 100, Height = 30, BackColor = Color.Green, ForeColor = Color.White };
+            Label lblDescricao = new Label { Text = "Descricao:", Location = new Point(15, 135), Width = 80, Font = new Font("Arial", 10) };
+            txtDescricao = new TextBox { Location = new Point(100, 135), Width = 400, Height = 50, Multiline = true };
+
+            Button btnAbrir = new Button { Text = "Abrir Chamado", Location = new Point(100, 195), Width = 100, Height = 30, BackColor = Color.Green, ForeColor = Color.White };
             btnAbrir.Click += BtnAbrir_Click;
 
-            pnlForm.Controls.AddRange(new Control[] { lblCliente, cbCliente, lblAtendente, cbAtendente, lblDescricao, txtDescricao, btnAbrir });
+            Label lblStatus = new Label { Text = "Status:", Location = new Point(450, 55), Width = 80, Font = new Font("Arial", 10) };
+            cbStatus = new ComboBox { Location = new Point(530, 55), Width = 150, DropDownStyle = ComboBoxStyle.DropDownList };
+            cbStatus.DataSource = Enum.GetValues(typeof(StatusChamado));
 
-            dgvChamados = new DataGridView { Dock = DockStyle.Fill, AllowUserToAddRows = false, ReadOnly = true };
+            btnAtualizarStatus = new Button { Text = "Atualizar Status", Location = new Point(530, 95), Width = 150, Height = 30, BackColor = Color.CornflowerBlue, ForeColor = Color.White };
+            btnAtualizarStatus.Click += BtnAtualizarStatus_Click;
+
+            pnlForm.Controls.AddRange(new Control[] { lblBusca, txtBusca, lblCliente, cbCliente, lblAtendente, cbAtendente, lblDescricao, txtDescricao, btnAbrir, lblStatus, cbStatus, btnAtualizarStatus });
+
+            dgvChamados = new DataGridView { Dock = DockStyle.Fill, AllowUserToAddRows = false, ReadOnly = true, SelectionMode = DataGridViewSelectionMode.FullRowSelect };
             dgvChamados.Columns.Add("Id", "ID");
             dgvChamados.Columns.Add("Cliente", "Cliente");
             dgvChamados.Columns.Add("Atendente", "Atendente");
@@ -56,32 +70,21 @@ namespace GestaoChamados
             Controls.AddRange(new Control[] { dgvChamados, pnlForm });
         }
 
-        private void BtnAbrir_Click(object sender, EventArgs e)
+        private void BtnAtualizarStatus_Click(object sender, EventArgs e)
         {
             try
             {
-                if (cbCliente.SelectedIndex < 0 || cbAtendente.SelectedIndex < 0)
+                if (dgvChamados.CurrentRow == null)
                 {
-                    MessageBox.Show("Selecione cliente e atendente!", "Validacao", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Selecione um chamado na lista!", "Validacao", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(txtDescricao.Text))
-                {
-                    MessageBox.Show("Digite a descricao!", "Validacao", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                int id = (int)dgvChamados.CurrentRow.Cells[0].Value;
+                StatusChamado novoStatus = (StatusChamado)cbStatus.SelectedItem;
 
-                int clienteId = (int)cbCliente.SelectedValue;
-                int atendenteId = (int)cbAtendente.SelectedValue;
-                var cliente = clienteService.BuscarPorId(clienteId);
-                var atendente = atendenteService.BuscarPorId(atendenteId);
-
-                chamadoService.Abrir(cliente, atendente, txtDescricao.Text);
-                MessageBox.Show("Chamado aberto com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtDescricao.Clear();
-                cbCliente.SelectedIndex = -1;
-                cbAtendente.SelectedIndex = -1;
+                chamadoService.AlterarStatus(id, novoStatus);
+                MessageBox.Show("Status atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CarregarChamados();
             }
             catch (Exception ex)
@@ -90,28 +93,15 @@ namespace GestaoChamados
             }
         }
 
-        private void CarregarClientes()
+        private void FiltrarChamados()
         {
-            var clientes = clienteService.Listar();
-            cbCliente.DataSource = new List<Cliente>(clientes);
-            cbCliente.DisplayMember = "Nome";
-            cbCliente.ValueMember = "Id";
-            cbCliente.SelectedIndex = -1;
-        }
+            string termo = txtBusca.Text.ToLower();
+            var filtrados = chamadoService.Listar()
+                .Where(c => c.Descricao.ToLower().Contains(termo) || c.Cliente.Nome.ToLower().Contains(termo))
+                .ToList();
 
-        private void CarregarAtendentes()
-        {
-            var atendentes = atendenteService.Listar();
-            cbAtendente.DataSource = new List<Atendente>(atendentes);
-            cbAtendente.DisplayMember = "Nome";
-            cbAtendente.ValueMember = "Id";
-            cbAtendente.SelectedIndex = -1;
-        }
-
-        private void CarregarChamados()
-        {
             dgvChamados.Rows.Clear();
-            foreach (var chamado in chamadoService.Listar())
+            foreach (var chamado in filtrados)
             {
                 dgvChamados.Rows.Add(
                     chamado.Id,
