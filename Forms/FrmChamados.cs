@@ -242,7 +242,18 @@ namespace GestaoChamados
                     return;
                 }
 
-                int id = (int)dgvChamados.CurrentRow.Cells[0].Value;
+                if (dgvChamados.CurrentRow.Cells[0].Value == null || !int.TryParse(dgvChamados.CurrentRow.Cells[0].Value.ToString(), out int id))
+                {
+                    MessageBox.Show("Falha ao ler o ID do chamado selecionado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (cbStatus.SelectedItem == null)
+                {
+                    MessageBox.Show("Selecione um status válido para atualizar!", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 StatusChamado novoStatus = (StatusChamado)cbStatus.SelectedItem;
 
                 chamadoService.AlterarStatus(id, novoStatus);
@@ -281,8 +292,8 @@ namespace GestaoChamados
                     return;
                 }
 
-                int clienteId = (int)cbCliente.SelectedValue;
-                int atendenteId = (int)cbAtendente.SelectedValue;
+                int clienteId = Convert.ToInt32(cbCliente.SelectedValue);
+                int atendenteId = Convert.ToInt32(cbAtendente.SelectedValue);
                 var cliente = clienteService.BuscarPorId(clienteId);
                 var atendente = atendenteService.BuscarPorId(atendenteId);
 
