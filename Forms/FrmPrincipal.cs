@@ -59,7 +59,7 @@ namespace GestaoChamados
             btnChamados.FlatAppearance.BorderSize = 0;
             btnChamados.MouseEnter += (s, e) => btnChamados.BackColor = corHover;
             btnChamados.MouseLeave += (s, e) => btnChamados.BackColor = corBotao;
-            btnChamados.Click += (s, e) => { new FrmChamados().ShowDialog(); AtualizarDashboard(); };
+            btnChamados.Click += (s, e) => { using (var frm = new FrmChamados()) frm.ShowDialog(); AtualizarDashboard(); };
 
             Button btnAtendentes = new Button 
             { 
@@ -77,7 +77,7 @@ namespace GestaoChamados
             btnAtendentes.FlatAppearance.BorderSize = 0;
             btnAtendentes.MouseEnter += (s, e) => btnAtendentes.BackColor = corHover;
             btnAtendentes.MouseLeave += (s, e) => btnAtendentes.BackColor = corBotao;
-            btnAtendentes.Click += (s, e) => { new FrmAtendentes().ShowDialog(); AtualizarDashboard(); };
+            btnAtendentes.Click += (s, e) => { using (var frm = new FrmAtendentes()) frm.ShowDialog(); AtualizarDashboard(); };
 
             Button btnClientes = new Button 
             { 
@@ -95,7 +95,7 @@ namespace GestaoChamados
             btnClientes.FlatAppearance.BorderSize = 0;
             btnClientes.MouseEnter += (s, e) => btnClientes.BackColor = corHover;
             btnClientes.MouseLeave += (s, e) => btnClientes.BackColor = corBotao;
-            btnClientes.Click += (s, e) => { new FrmClientes().ShowDialog(); AtualizarDashboard(); };
+            btnClientes.Click += (s, e) => { using (var frm = new FrmClientes()) frm.ShowDialog(); AtualizarDashboard(); };
 
             Button btnSair = new Button 
             { 
