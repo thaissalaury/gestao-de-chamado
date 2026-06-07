@@ -66,8 +66,7 @@ namespace GestaoChamados
                 Width = 600,
                 Height = 230,
                 BackColor = Color.White,
-                Location = new Point(20, 0),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+                Location = new Point(20, 0)
             };
 
             Label lblTituloNovo = new Label { Text = "ABRIR NOVO CHAMADO", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = ColorTranslator.FromHtml("#2563EB"), Location = new Point(20, 15), Width = 300 };
@@ -76,16 +75,15 @@ namespace GestaoChamados
             cbCliente = new ComboBox { Location = new Point(20, 75), Width = 250, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
 
             Label lblAtendente = new Label { Text = "Atendente:", Location = new Point(290, 50), Width = 100, Font = fontLabel, ForeColor = Color.Gray };
-            cbAtendente = new ComboBox { Location = new Point(290, 75), Width = 250, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat, Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right };
+            cbAtendente = new ComboBox { Location = new Point(290, 75), Width = 250, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
 
             Label lblDescricao = new Label { Text = "Descrição do Problema:", Location = new Point(20, 115), Width = 200, Font = fontLabel, ForeColor = Color.Gray };
-            txtDescricao = new TextBox { Location = new Point(20, 140), Width = 400, Height = 70, Font = fontInput, Multiline = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right };
+            txtDescricao = new TextBox { Location = new Point(20, 140), Width = 400, Height = 70, Font = fontInput, Multiline = true, BorderStyle = BorderStyle.FixedSingle };
 
             Button btnAbrir = new Button 
             { 
                 Text = "Abrir Chamado", 
                 Location = new Point(440, 140),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 Width = 140, 
                 Height = 70, 
                 BackColor = ColorTranslator.FromHtml("#10B981"), 
@@ -107,8 +105,7 @@ namespace GestaoChamados
                 Width = 380,
                 Height = 230,
                 BackColor = Color.White,
-                Location = new Point(640, 0),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right
+                Location = new Point(640, 0)
             };
 
             Label lblTituloGerenciar = new Label { Text = "GERENCIAR & BUSCAR", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = ColorTranslator.FromHtml("#F59E0B"), Location = new Point(20, 15), Width = 300 };

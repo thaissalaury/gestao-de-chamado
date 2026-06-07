@@ -65,7 +65,7 @@ namespace GestaoChamados
             txtNome = new TextBox { Location = new Point(20, 45), Width = 350, Font = fontInput, BorderStyle = BorderStyle.FixedSingle };
 
             Label lblContato = new Label { Text = "Contato (E-mail ou Telefone):", Location = new Point(400, 20), Width = 250, Font = fontLabel, ForeColor = Color.Gray };
-            txtContato = new TextBox { Location = new Point(400, 45), Width = 300, Font = fontInput, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right };
+            txtContato = new TextBox { Location = new Point(400, 45), Width = 300, Font = fontInput, BorderStyle = BorderStyle.FixedSingle };
 
             Button btnAdicionar = new Button 
             { 
