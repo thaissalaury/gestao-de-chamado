@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 using System.Drawing;
 using GestaoChamados.Models;
@@ -21,32 +22,138 @@ namespace GestaoChamados
         private void InitializeComponent()
         {
             Text = "Cadastro de Clientes";
-            Size = new Size(700, 500);
+            Size = new Size(800, 600);
             StartPosition = FormStartPosition.CenterParent;
-            BackColor = Color.WhiteSmoke;
+            BackColor = ColorTranslator.FromHtml("#F5F7FA"); // Fundo principal
 
-            Panel pnlForm = new Panel { Dock = DockStyle.Top, Height = 130, BackColor = Color.LightGray, Padding = new Padding(15) };
+            // Título do Formulário
+            Label lblTitulo = new Label
+            {
+                Text = "GERENCIAMENTO DE CLIENTES",
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = ColorTranslator.FromHtml("#0F172A"),
+                Dock = DockStyle.Top,
+                Height = 60,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Padding = new Padding(20, 0, 0, 0)
+            };
 
-            Label lblNome = new Label { Text = "Nome:", Location = new Point(15, 15), Width = 80, Font = new Font("Arial", 10) };
-            txtNome = new TextBox { Location = new Point(100, 15), Width = 300, Height = 25 };
+            // Card de Cadastro
+            Panel pnlCard = new Panel 
+            { 
+                Dock = DockStyle.Top, 
+                Height = 160, 
+                BackColor = Color.White,
+                Padding = new Padding(20)
+            };
 
-            Label lblContato = new Label { Text = "Contato:", Location = new Point(15, 55), Width = 80, Font = new Font("Arial", 10) };
-            txtContato = new TextBox { Location = new Point(100, 55), Width = 300, Height = 25 };
+            // Adiciona uma margem ao redor do card usando um Panel contêiner
+            Panel pnlCardContainer = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 180,
+                Padding = new Padding(20, 0, 20, 20),
+                BackColor = Color.Transparent
+            };
+            
+            pnlCardContainer.Controls.Add(pnlCard);
 
-            Button btnAdicionar = new Button { Text = "Adicionar", Location = new Point(100, 90), Width = 80, Height = 30, BackColor = Color.Green, ForeColor = Color.White };
+            Font fontLabel = new Font("Segoe UI", 10, FontStyle.Bold);
+            Font fontInput = new Font("Segoe UI", 10, FontStyle.Regular);
+
+            Label lblNome = new Label { Text = "Nome do Cliente:", Location = new Point(20, 20), Width = 150, Font = fontLabel, ForeColor = Color.Gray };
+            txtNome = new TextBox { Location = new Point(20, 45), Width = 350, Font = fontInput, BorderStyle = BorderStyle.FixedSingle };
+
+            Label lblContato = new Label { Text = "Contato (E-mail ou Telefone):", Location = new Point(400, 20), Width = 250, Font = fontLabel, ForeColor = Color.Gray };
+            txtContato = new TextBox { Location = new Point(400, 45), Width = 300, Font = fontInput, BorderStyle = BorderStyle.FixedSingle };
+
+            Button btnAdicionar = new Button 
+            { 
+                Text = "Adicionar Cliente", 
+                Location = new Point(20, 100), 
+                Width = 150, 
+                Height = 40, 
+                BackColor = ColorTranslator.FromHtml("#10B981"), 
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnAdicionar.FlatAppearance.BorderSize = 0;
+            btnAdicionar.MouseEnter += (s, e) => btnAdicionar.BackColor = ColorTranslator.FromHtml("#059669"); // Hover Sucesso
+            btnAdicionar.MouseLeave += (s, e) => btnAdicionar.BackColor = ColorTranslator.FromHtml("#10B981");
             btnAdicionar.Click += BtnAdicionar_Click;
 
-            Button btnLimpar = new Button { Text = "Limpar", Location = new Point(190, 90), Width = 80, Height = 30, BackColor = Color.Gray, ForeColor = Color.White };
+            Button btnLimpar = new Button 
+            { 
+                Text = "Limpar", 
+                Location = new Point(190, 100), 
+                Width = 100, 
+                Height = 40, 
+                BackColor = ColorTranslator.FromHtml("#64748B"), 
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnLimpar.FlatAppearance.BorderSize = 0;
+            btnLimpar.MouseEnter += (s, e) => btnLimpar.BackColor = ColorTranslator.FromHtml("#475569"); // Hover Cinza
+            btnLimpar.MouseLeave += (s, e) => btnLimpar.BackColor = ColorTranslator.FromHtml("#64748B");
             btnLimpar.Click += (s, e) => { txtNome.Clear(); txtContato.Clear(); };
 
-            pnlForm.Controls.AddRange(new Control[] { lblNome, txtNome, lblContato, txtContato, btnAdicionar, btnLimpar });
+            pnlCard.Controls.AddRange(new Control[] { lblNome, txtNome, lblContato, txtContato, btnAdicionar, btnLimpar });
 
-            dgvClientes = new DataGridView { Dock = DockStyle.Fill, AllowUserToAddRows = false, ReadOnly = true };
+            // Grid de Clientes
+            Panel pnlGridContainer = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Padding = new Padding(20, 0, 20, 20),
+                BackColor = Color.Transparent
+            };
+
+            dgvClientes = new DataGridView 
+            { 
+                Dock = DockStyle.Fill, 
+                AllowUserToAddRows = false, 
+                ReadOnly = true,
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
+                ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None,
+                EnableHeadersVisualStyles = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                RowHeadersVisible = false,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            };
+
+            // Estilo do Cabeçalho
+            dgvClientes.ColumnHeadersDefaultCellStyle.BackColor = ColorTranslator.FromHtml("#F8FAFC");
+            dgvClientes.ColumnHeadersDefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#475569");
+            dgvClientes.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            dgvClientes.ColumnHeadersDefaultCellStyle.Padding = new Padding(10);
+            dgvClientes.ColumnHeadersHeight = 45;
+
+            // Estilo das Linhas
+            dgvClientes.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+            dgvClientes.DefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#0F172A");
+            dgvClientes.DefaultCellStyle.BackColor = Color.White;
+            dgvClientes.DefaultCellStyle.SelectionBackColor = ColorTranslator.FromHtml("#E2E8F0");
+            dgvClientes.DefaultCellStyle.SelectionForeColor = ColorTranslator.FromHtml("#0F172A");
+            dgvClientes.DefaultCellStyle.Padding = new Padding(10, 0, 10, 0);
+            dgvClientes.RowTemplate.Height = 40;
+            dgvClientes.AlternatingRowsDefaultCellStyle.BackColor = ColorTranslator.FromHtml("#F8FAFC");
+
             dgvClientes.Columns.Add("Id", "ID");
-            dgvClientes.Columns.Add("Nome", "Nome");
+            dgvClientes.Columns.Add("Nome", "Nome do Cliente");
             dgvClientes.Columns.Add("Contato", "Contato");
+            
+            // Ajustar largura da coluna ID
+            dgvClientes.Columns["Id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            dgvClientes.Columns["Id"].Width = 80;
 
-            Controls.AddRange(new Control[] { dgvClientes, pnlForm });
+            pnlGridContainer.Controls.Add(dgvClientes);
+
+            Controls.AddRange(new Control[] { pnlGridContainer, pnlCardContainer, lblTitulo });
         }
 
         private void BtnAdicionar_Click(object sender, EventArgs e)
