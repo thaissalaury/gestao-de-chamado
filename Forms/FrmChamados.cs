@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Linq;
@@ -30,47 +31,205 @@ namespace GestaoChamados
 
         private void InitializeComponent()
         {
-            Text = "Gestao de Chamados";
-            Size = new Size(900, 600);
+            Text = "Gestão de Chamados";
+            Size = new Size(1100, 750);
             StartPosition = FormStartPosition.CenterParent;
-            BackColor = Color.WhiteSmoke;
+            BackColor = ColorTranslator.FromHtml("#F5F7FA"); // Fundo principal
 
-            Panel pnlForm = new Panel { Dock = DockStyle.Top, Height = 220, BackColor = Color.LightGray, Padding = new Padding(15) };
+            Font fontLabel = new Font("Segoe UI", 10, FontStyle.Bold);
+            Font fontInput = new Font("Segoe UI", 10, FontStyle.Regular);
 
-            Label lblBusca = new Label { Text = "Buscar:", Location = new Point(15, 15), Width = 80, Font = new Font("Arial", 10) };
-            txtBusca = new TextBox { Location = new Point(100, 15), Width = 300, Height = 25 };
-            txtBusca.TextChanged += (s, e) => FiltrarChamados();
+            // Título
+            Label lblTitulo = new Label
+            {
+                Text = "CENTRAL DE CHAMADOS",
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = ColorTranslator.FromHtml("#0F172A"),
+                Dock = DockStyle.Top,
+                Height = 60,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Padding = new Padding(20, 0, 0, 0)
+            };
 
-            Label lblCliente = new Label { Text = "Cliente:", Location = new Point(15, 55), Width = 80, Font = new Font("Arial", 10) };
-            cbCliente = new ComboBox { Location = new Point(100, 55), Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
+            // Painel Topo (Container dos Cards)
+            Panel pnlTopContainer = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 250,
+                BackColor = Color.Transparent,
+                Padding = new Padding(20, 0, 20, 20)
+            };
 
-            Label lblAtendente = new Label { Text = "Atendente:", Location = new Point(15, 95), Width = 80, Font = new Font("Arial", 10) };
-            cbAtendente = new ComboBox { Location = new Point(100, 95), Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
+            // Card Novo Chamado
+            Panel pnlNovo = new Panel
+            {
+                Width = 600,
+                Height = 230,
+                BackColor = Color.White,
+                Location = new Point(20, 0)
+            };
 
-            Label lblDescricao = new Label { Text = "Descricao:", Location = new Point(15, 135), Width = 80, Font = new Font("Arial", 10) };
-            txtDescricao = new TextBox { Location = new Point(100, 135), Width = 400, Height = 50, Multiline = true };
+            Label lblTituloNovo = new Label { Text = "ABRIR NOVO CHAMADO", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = ColorTranslator.FromHtml("#2563EB"), Location = new Point(20, 15), Width = 300 };
+            
+            Label lblCliente = new Label { Text = "Cliente:", Location = new Point(20, 50), Width = 100, Font = fontLabel, ForeColor = Color.Gray };
+            cbCliente = new ComboBox { Location = new Point(20, 75), Width = 250, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
 
-            Button btnAbrir = new Button { Text = "Abrir Chamado", Location = new Point(100, 195), Width = 100, Height = 30, BackColor = Color.Green, ForeColor = Color.White };
+            Label lblAtendente = new Label { Text = "Atendente:", Location = new Point(290, 50), Width = 100, Font = fontLabel, ForeColor = Color.Gray };
+            cbAtendente = new ComboBox { Location = new Point(290, 75), Width = 250, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
+
+            Label lblDescricao = new Label { Text = "Descrição do Problema:", Location = new Point(20, 115), Width = 200, Font = fontLabel, ForeColor = Color.Gray };
+            txtDescricao = new TextBox { Location = new Point(20, 140), Width = 400, Height = 70, Font = fontInput, Multiline = true, BorderStyle = BorderStyle.FixedSingle };
+
+            Button btnAbrir = new Button 
+            { 
+                Text = "Abrir Chamado", 
+                Location = new Point(440, 140), 
+                Width = 140, 
+                Height = 70, 
+                BackColor = ColorTranslator.FromHtml("#10B981"), 
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnAbrir.FlatAppearance.BorderSize = 0;
+            btnAbrir.MouseEnter += (s, e) => btnAbrir.BackColor = ColorTranslator.FromHtml("#059669");
+            btnAbrir.MouseLeave += (s, e) => btnAbrir.BackColor = ColorTranslator.FromHtml("#10B981");
             btnAbrir.Click += BtnAbrir_Click;
 
-            Label lblStatus = new Label { Text = "Status:", Location = new Point(450, 55), Width = 80, Font = new Font("Arial", 10) };
-            cbStatus = new ComboBox { Location = new Point(530, 55), Width = 150, DropDownStyle = ComboBoxStyle.DropDownList };
+            pnlNovo.Controls.AddRange(new Control[] { lblTituloNovo, lblCliente, cbCliente, lblAtendente, cbAtendente, lblDescricao, txtDescricao, btnAbrir });
+
+            // Card Gerenciar / Filtro
+            Panel pnlGerenciar = new Panel
+            {
+                Width = 380,
+                Height = 230,
+                BackColor = Color.White,
+                Location = new Point(640, 0)
+            };
+
+            Label lblTituloGerenciar = new Label { Text = "GERENCIAR & BUSCAR", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = ColorTranslator.FromHtml("#F59E0B"), Location = new Point(20, 15), Width = 300 };
+
+            Label lblBusca = new Label { Text = "Buscar Chamado:", Location = new Point(20, 50), Width = 150, Font = fontLabel, ForeColor = Color.Gray };
+            txtBusca = new TextBox { Location = new Point(20, 75), Width = 340, Font = fontInput, BorderStyle = BorderStyle.FixedSingle };
+            txtBusca.TextChanged += (s, e) => FiltrarChamados();
+
+            Label lblStatus = new Label { Text = "Alterar Status:", Location = new Point(20, 115), Width = 150, Font = fontLabel, ForeColor = Color.Gray };
+            cbStatus = new ComboBox { Location = new Point(20, 140), Width = 200, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
             cbStatus.DataSource = Enum.GetValues(typeof(StatusChamado));
 
-            btnAtualizarStatus = new Button { Text = "Atualizar Status", Location = new Point(530, 95), Width = 150, Height = 30, BackColor = Color.CornflowerBlue, ForeColor = Color.White };
+            btnAtualizarStatus = new Button 
+            { 
+                Text = "Atualizar", 
+                Location = new Point(240, 140), 
+                Width = 120, 
+                Height = 28, 
+                BackColor = ColorTranslator.FromHtml("#2563EB"), 
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnAtualizarStatus.FlatAppearance.BorderSize = 0;
+            btnAtualizarStatus.MouseEnter += (s, e) => btnAtualizarStatus.BackColor = ColorTranslator.FromHtml("#3B82F6");
+            btnAtualizarStatus.MouseLeave += (s, e) => btnAtualizarStatus.BackColor = ColorTranslator.FromHtml("#2563EB");
             btnAtualizarStatus.Click += BtnAtualizarStatus_Click;
 
-            pnlForm.Controls.AddRange(new Control[] { lblBusca, txtBusca, lblCliente, cbCliente, lblAtendente, cbAtendente, lblDescricao, txtDescricao, btnAbrir, lblStatus, cbStatus, btnAtualizarStatus });
+            pnlGerenciar.Controls.AddRange(new Control[] { lblTituloGerenciar, lblBusca, txtBusca, lblStatus, cbStatus, btnAtualizarStatus });
 
-            dgvChamados = new DataGridView { Dock = DockStyle.Fill, AllowUserToAddRows = false, ReadOnly = true, SelectionMode = DataGridViewSelectionMode.FullRowSelect };
+            pnlTopContainer.Controls.Add(pnlNovo);
+            pnlTopContainer.Controls.Add(pnlGerenciar);
+
+            // Container do Grid
+            Panel pnlGridContainer = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Padding = new Padding(20, 0, 20, 20),
+                BackColor = Color.Transparent
+            };
+
+            dgvChamados = new DataGridView 
+            { 
+                Dock = DockStyle.Fill, 
+                AllowUserToAddRows = false, 
+                ReadOnly = true,
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
+                ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None,
+                EnableHeadersVisualStyles = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                RowHeadersVisible = false,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            };
+
+            // Estilo do Cabeçalho
+            dgvChamados.ColumnHeadersDefaultCellStyle.BackColor = ColorTranslator.FromHtml("#F8FAFC");
+            dgvChamados.ColumnHeadersDefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#475569");
+            dgvChamados.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            dgvChamados.ColumnHeadersDefaultCellStyle.Padding = new Padding(10);
+            dgvChamados.ColumnHeadersHeight = 45;
+
+            // Estilo das Linhas
+            dgvChamados.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+            dgvChamados.DefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#0F172A");
+            dgvChamados.DefaultCellStyle.BackColor = Color.White;
+            dgvChamados.DefaultCellStyle.SelectionBackColor = ColorTranslator.FromHtml("#E2E8F0");
+            dgvChamados.DefaultCellStyle.SelectionForeColor = ColorTranslator.FromHtml("#0F172A");
+            dgvChamados.DefaultCellStyle.Padding = new Padding(10, 0, 10, 0);
+            dgvChamados.RowTemplate.Height = 45;
+            dgvChamados.AlternatingRowsDefaultCellStyle.BackColor = ColorTranslator.FromHtml("#F8FAFC");
+
             dgvChamados.Columns.Add("Id", "ID");
             dgvChamados.Columns.Add("Cliente", "Cliente");
             dgvChamados.Columns.Add("Atendente", "Atendente");
-            dgvChamados.Columns.Add("Descricao", "Descricao");
+            dgvChamados.Columns.Add("Descricao", "Descrição");
             dgvChamados.Columns.Add("Status", "Status");
-            dgvChamados.Columns.Add("Data", "Data");
+            dgvChamados.Columns.Add("Data", "Data Abertura");
+            
+            dgvChamados.Columns["Id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            dgvChamados.Columns["Id"].Width = 60;
+            dgvChamados.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            dgvChamados.Columns["Status"].Width = 150;
 
-            Controls.AddRange(new Control[] { dgvChamados, pnlForm });
+            // Formatação Condicional de Status
+            dgvChamados.CellFormatting += DgvChamados_CellFormatting;
+
+            pnlGridContainer.Controls.Add(dgvChamados);
+
+            Controls.AddRange(new Control[] { pnlGridContainer, pnlTopContainer, lblTitulo });
+        }
+
+        private void DgvChamados_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvChamados.Columns[e.ColumnIndex].Name == "Status" && e.Value != null)
+            {
+                string status = e.Value.ToString();
+                
+                // Configura fundo para ficar como uma "Tag"
+                e.CellStyle.ForeColor = Color.White;
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+
+                if (status == "Aberto")
+                {
+                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#EF4444"); // Vermelho
+                    e.CellStyle.SelectionBackColor = ColorTranslator.FromHtml("#EF4444");
+                    e.Value = "ABERTO";
+                }
+                else if (status == "EmAndamento")
+                {
+                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#F59E0B"); // Laranja
+                    e.Value = "EM ANDAMENTO"; 
+                    e.CellStyle.SelectionBackColor = ColorTranslator.FromHtml("#F59E0B");
+                }
+                else if (status == "Resolvido")
+                {
+                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#10B981"); // Verde
+                    e.CellStyle.SelectionBackColor = ColorTranslator.FromHtml("#10B981");
+                    e.Value = "RESOLVIDO";
+                }
+            }
         }
 
         private void BtnAtualizarStatus_Click(object sender, EventArgs e)
@@ -79,7 +238,7 @@ namespace GestaoChamados
             {
                 if (dgvChamados.CurrentRow == null)
                 {
-                    MessageBox.Show("Selecione um chamado na lista!", "Validacao", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Selecione um chamado na lista!", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
