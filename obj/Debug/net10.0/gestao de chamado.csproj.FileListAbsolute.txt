@@ -1,0 +1,15 @@
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\gestao de chamado.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\gestao de chamado.AssemblyInfoInputs.cache
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\gestao de chamado.AssemblyInfo.cs
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\gestao de chamado.csproj.CoreCompileInputs.cache
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\gestao de chamado.sourcelink.json
+C:\Users\Thaissa\source\repos\gestao-de-chamado\bin\Debug\net10.0\gestao de chamado.exe
+C:\Users\Thaissa\source\repos\gestao-de-chamado\bin\Debug\net10.0\gestao de chamado.deps.json
+C:\Users\Thaissa\source\repos\gestao-de-chamado\bin\Debug\net10.0\gestao de chamado.runtimeconfig.json
+C:\Users\Thaissa\source\repos\gestao-de-chamado\bin\Debug\net10.0\gestao de chamado.dll
+C:\Users\Thaissa\source\repos\gestao-de-chamado\bin\Debug\net10.0\gestao de chamado.pdb
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\gestao de chamado.dll
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\refint\gestao de chamado.dll
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\gestao de chamado.pdb
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\gestao de chamado.genruntimeconfig.cache
+C:\Users\Thaissa\source\repos\gestao-de-chamado\obj\Debug\net10.0\ref\gestao de chamado.dll
