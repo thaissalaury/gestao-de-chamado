@@ -1,1 +1,0 @@
-﻿using System.Windows.Forms; using GestaoChamados.Services; namespace GestaoChamados { public class FrmAtendentes : Form { private AtendenteService svc; public FrmAtendentes() { this.Text = "Atendentes"; } } }

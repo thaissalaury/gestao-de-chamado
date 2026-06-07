@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Thaissa\\source\\repos\\gestao de chamado\\gestao de chamado.csproj",
+      "projectUniqueName": "C:\\Users\\Thaissa\\source\\repos\\gestao-de-chamado\\gestao de chamado.csproj",
       "projectName": "gestao de chamado",
-      "projectPath": "C:\\Users\\Thaissa\\source\\repos\\gestao de chamado\\gestao de chamado.csproj",
+      "projectPath": "C:\\Users\\Thaissa\\source\\repos\\gestao-de-chamado\\gestao de chamado.csproj",
       "packagesPath": "C:\\Users\\Thaissa\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Thaissa\\source\\repos\\gestao de chamado\\obj\\",
+      "outputPath": "C:\\Users\\Thaissa\\source\\repos\\gestao-de-chamado\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
