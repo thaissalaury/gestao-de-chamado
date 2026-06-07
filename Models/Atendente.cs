@@ -3,8 +3,8 @@ namespace GestaoChamados.Models
     public class Atendente
     {
         public int Id { get; set; }
-        public string Nome { get; set; }
-        public string Setor { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public string Setor { get; set; } = string.Empty;
 
         public Atendente() { }
 
