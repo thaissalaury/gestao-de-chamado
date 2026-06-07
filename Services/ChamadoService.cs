@@ -4,8 +4,16 @@ namespace GestaoChamados.Services
 {
     public class ChamadoService
     {
-        private static List<Chamado> chamados = new List<Chamado>();
+        private static List<Chamado> chamados = DataPersistence.Load<Chamado>("chamados.json");
         private static int proximoId = 1;
+
+        static ChamadoService()
+        {
+            if (chamados.Count > 0)
+            {
+                proximoId = chamados.Max(c => c.Id) + 1;
+            }
+        }
 
         public void Abrir(Cliente cliente, Atendente atendente, string descricao)
         {
@@ -28,6 +36,7 @@ namespace GestaoChamados.Services
             );
 
             chamados.Add(chamado);
+            DataPersistence.Save("chamados.json", chamados);
         }
 
         public List<Chamado> Listar()
@@ -52,6 +61,7 @@ namespace GestaoChamados.Services
                 throw new ArgumentException("Chamado não encontrado.");
 
             chamado.Status = novoStatus;
+            DataPersistence.Save("chamados.json", chamados);
         }
     }
 }

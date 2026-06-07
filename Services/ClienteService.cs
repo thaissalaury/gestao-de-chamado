@@ -4,8 +4,16 @@ namespace GestaoChamados.Services
 {
     public class ClienteService
     {
-        private static List<Cliente> clientes = new List<Cliente>();
+        private static List<Cliente> clientes = DataPersistence.Load<Cliente>("clientes.json");
         private static int proximoId = 1;
+
+        static ClienteService()
+        {
+            if (clientes.Count > 0)
+            {
+                proximoId = clientes.Max(c => c.Id) + 1;
+            }
+        }
 
         public void Cadastrar(string nome, string contato)
         {
@@ -17,6 +25,7 @@ namespace GestaoChamados.Services
 
             var cliente = new Cliente(proximoId++, nome, contato);
             clientes.Add(cliente);
+            DataPersistence.Save("clientes.json", clientes);
         }
 
         public List<Cliente> Listar()
