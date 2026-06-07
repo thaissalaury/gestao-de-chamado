@@ -1,6 +1,7 @@
 using System.Windows.Forms;
 using System.Drawing;
 using System.Linq;
+using System.Collections.Generic;
 using GestaoChamados.Models;
 using GestaoChamados.Services;
 
