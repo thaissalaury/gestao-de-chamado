@@ -30,8 +30,8 @@ namespace GestaoChamados
 
             Label lblTitulo = new Label 
             { 
-                Text = "DASHBOARD", 
-                Font = new Font("Segoe UI", 16, FontStyle.Bold), 
+                Text = "GESTÃO DE CHAMADO", 
+                Font = new Font("Segoe UI", 14, FontStyle.Bold), 
                 ForeColor = Color.White, 
                 Dock = DockStyle.Top, 
                 Height = 80, 
