@@ -148,11 +148,12 @@ namespace GestaoChamados
             AtualizarDashboard();
         }
 
-        private Panel pnlContent;
-        private FlowLayoutPanel pnlCards;
+        private Panel? pnlContent;
+        private FlowLayoutPanel? pnlCards;
 
         private void AtualizarDashboard()
         {
+            if (pnlCards == null) return;
             pnlCards.Controls.Clear();
 
             // Lê do arquivo JSON usando o fluxo existente de DataPersistence

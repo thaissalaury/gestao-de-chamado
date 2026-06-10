@@ -9,9 +9,9 @@ namespace GestaoChamados
     public class FrmAtendentes : Form
     {
         private AtendenteService service = new AtendenteService();
-        private DataGridView dgvAtendentes;
-        private TextBox txtNome;
-        private TextBox txtSetor;
+        private DataGridView dgvAtendentes = null!;
+        private TextBox txtNome = null!;
+        private TextBox txtSetor = null!;
 
         public FrmAtendentes()
         {
@@ -148,15 +148,19 @@ namespace GestaoChamados
             dgvAtendentes.Columns.Add("Setor", "Setor");
             
             // Ajustar largura da coluna ID
-            dgvAtendentes.Columns["Id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgvAtendentes.Columns["Id"].Width = 80;
+            var colId = dgvAtendentes.Columns["Id"];
+            if (colId != null)
+            {
+                colId.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                colId.Width = 80;
+            }
 
             pnlGridContainer.Controls.Add(dgvAtendentes);
 
             Controls.AddRange(new Control[] { pnlGridContainer, pnlCardContainer, lblTitulo });
         }
 
-        private void BtnAdicionar_Click(object sender, EventArgs e)
+        private void BtnAdicionar_Click(object? sender, EventArgs e)
         {
             try
             {

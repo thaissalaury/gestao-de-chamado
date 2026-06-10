@@ -33,7 +33,7 @@ namespace GestaoChamados.Services
             return atendentes.ToList();
         }
 
-        public Atendente BuscarPorId(int id)
+        public Atendente? BuscarPorId(int id)
         {
             return atendentes.FirstOrDefault(a => a.Id == id);
         }

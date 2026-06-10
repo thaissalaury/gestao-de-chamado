@@ -9,9 +9,9 @@ namespace GestaoChamados
     public class FrmClientes : Form
     {
         private ClienteService service = new ClienteService();
-        private DataGridView dgvClientes;
-        private TextBox txtNome;
-        private TextBox txtContato;
+        private DataGridView dgvClientes = null!;
+        private TextBox txtNome = null!;
+        private TextBox txtContato = null!;
 
         public FrmClientes()
         {
@@ -148,15 +148,19 @@ namespace GestaoChamados
             dgvClientes.Columns.Add("Contato", "Contato");
             
             // Ajustar largura da coluna ID
-            dgvClientes.Columns["Id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgvClientes.Columns["Id"].Width = 80;
+            var colId = dgvClientes.Columns["Id"];
+            if (colId != null)
+            {
+                colId.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                colId.Width = 80;
+            }
 
             pnlGridContainer.Controls.Add(dgvClientes);
 
             Controls.AddRange(new Control[] { pnlGridContainer, pnlCardContainer, lblTitulo });
         }
 
-        private void BtnAdicionar_Click(object sender, EventArgs e)
+        private void BtnAdicionar_Click(object? sender, EventArgs e)
         {
             try
             {

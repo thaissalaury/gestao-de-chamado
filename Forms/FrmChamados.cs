@@ -13,13 +13,13 @@ namespace GestaoChamados
         private ChamadoService chamadoService = new ChamadoService();
         private ClienteService clienteService = new ClienteService();
         private AtendenteService atendenteService = new AtendenteService();
-        private DataGridView dgvChamados;
-        private ComboBox cbCliente;
-        private ComboBox cbAtendente;
-        private TextBox txtDescricao;
-        private TextBox txtBusca;
-        private ComboBox cbStatus;
-        private Button btnAtualizarStatus;
+        private DataGridView dgvChamados = null!;
+        private ComboBox cbCliente = null!;
+        private ComboBox cbAtendente = null!;
+        private TextBox txtDescricao = null!;
+        private TextBox txtBusca = null!;
+        private ComboBox cbStatus = null!;
+        private Button btnAtualizarStatus = null!;
 
         public FrmChamados()
         {
@@ -187,10 +187,18 @@ namespace GestaoChamados
             dgvChamados.Columns.Add("Status", "Status");
             dgvChamados.Columns.Add("Data", "Data Abertura");
             
-            dgvChamados.Columns["Id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgvChamados.Columns["Id"].Width = 60;
-            dgvChamados.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dgvChamados.Columns["Status"].Width = 150;
+            var colId = dgvChamados.Columns["Id"];
+            if (colId != null)
+            {
+                colId.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                colId.Width = 60;
+            }
+            var colStatus = dgvChamados.Columns["Status"];
+            if (colStatus != null)
+            {
+                colStatus.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                colStatus.Width = 150;
+            }
 
             // Formatação Condicional de Status
             dgvChamados.CellFormatting += DgvChamados_CellFormatting;
@@ -200,11 +208,12 @@ namespace GestaoChamados
             Controls.AddRange(new Control[] { pnlGridContainer, pnlTopContainer, lblTitulo });
         }
 
-        private void DgvChamados_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void DgvChamados_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dgvChamados.Columns[e.ColumnIndex].Name == "Status" && e.Value != null)
+            var column = dgvChamados.Columns[e.ColumnIndex];
+            if (column != null && column.Name == "Status" && e.Value != null)
             {
-                string status = e.Value.ToString();
+                string status = e.Value.ToString() ?? string.Empty;
                 
                 // Configura fundo para ficar como uma "Tag"
                 e.CellStyle.ForeColor = Color.White;
@@ -232,17 +241,19 @@ namespace GestaoChamados
             }
         }
 
-        private void BtnAtualizarStatus_Click(object sender, EventArgs e)
+        private void BtnAtualizarStatus_Click(object? sender, EventArgs e)
         {
             try
             {
-                if (dgvChamados.CurrentRow == null)
+                var currentRow = dgvChamados.CurrentRow;
+                if (currentRow == null)
                 {
                     MessageBox.Show("Selecione um chamado na lista!", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                if (dgvChamados.CurrentRow.Cells[0].Value == null || !int.TryParse(dgvChamados.CurrentRow.Cells[0].Value.ToString(), out int id))
+                var cellValue = currentRow.Cells[0].Value;
+                if (cellValue == null || !int.TryParse(cellValue.ToString(), out int id))
                 {
                     MessageBox.Show("Falha ao ler o ID do chamado selecionado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -266,7 +277,7 @@ namespace GestaoChamados
             }
         }
 
-        private void BtnAbrir_Click(object sender, EventArgs e)
+        private void BtnAbrir_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -296,6 +307,12 @@ namespace GestaoChamados
                 int atendenteId = Convert.ToInt32(cbAtendente.SelectedValue);
                 var cliente = clienteService.BuscarPorId(clienteId);
                 var atendente = atendenteService.BuscarPorId(atendenteId);
+
+                if (cliente == null || atendente == null)
+                {
+                    MessageBox.Show("Erro ao localizar cliente ou atendente selecionado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 chamadoService.Abrir(cliente, atendente, descricao);
                 MessageBox.Show("Chamado aberto com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -348,7 +365,7 @@ namespace GestaoChamados
         {
             string termo = txtBusca.Text.ToLower();
             var filtrados = chamadoService.Listar()
-                .Where(c => c.Descricao.ToLower().Contains(termo) || c.Cliente.Nome.ToLower().Contains(termo))
+                .Where(c => c.Descricao.ToLower().Contains(termo) || (c.Cliente?.Nome?.ToLower().Contains(termo) ?? false))
                 .ToList();
 
             dgvChamados.Rows.Clear();

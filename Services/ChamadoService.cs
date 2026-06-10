@@ -49,7 +49,7 @@ namespace GestaoChamados.Services
             return chamados.Where(c => c.Status == StatusChamado.Aberto).ToList();
         }
 
-        public Chamado BuscarPorId(int id)
+        public Chamado? BuscarPorId(int id)
         {
             return chamados.FirstOrDefault(c => c.Id == id);
         }
