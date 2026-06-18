@@ -1,41 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using GestaoChamados.Models;
+using GestaoChamados.Repositories;
+using GestaoChamados.Services;
 
 namespace GestaoChamados.Services
 {
     public class AtendenteService
     {
-        private static List<Atendente> atendentes = DataPersistence.Load<Atendente>("atendentes.json");
-        private static int proximoId = 1;
+        private readonly AtendenteRepository _atendenteRepository = new AtendenteRepository();
 
-        static AtendenteService()
+        private void GarantirPermissaoDeEscrita()
         {
-            if (atendentes.Count > 0)
-            {
-                proximoId = atendentes.Max(a => a.Id) + 1;
-            }
+            if (!SessaoService.PodeEscrever)
+                throw new UnauthorizedAccessException("Seu papel não permite realizar esta ação.");
         }
 
         public void Cadastrar(string nome, string setor)
         {
+            GarantirPermissaoDeEscrita();
+
             if (string.IsNullOrWhiteSpace(nome))
                 throw new ArgumentException("Nome do atendente não pode ser vazio.");
 
             if (string.IsNullOrWhiteSpace(setor))
                 throw new ArgumentException("Setor do atendente não pode ser vazio.");
 
-            var atendente = new Atendente(proximoId++, nome, setor);
-            atendentes.Add(atendente);
-            DataPersistence.Save("atendentes.json", atendentes);
+            var atendente = new Atendente(0, nome, setor);
+            _atendenteRepository.Cadastrar(atendente);
         }
 
         public List<Atendente> Listar()
         {
-            return atendentes.ToList();
+            return _atendenteRepository.Listar();
         }
 
         public Atendente? BuscarPorId(int id)
         {
-            return atendentes.FirstOrDefault(a => a.Id == id);
+            return _atendenteRepository.BuscarPorId(id);
         }
     }
 }
