@@ -102,6 +102,25 @@ namespace GestaoChamados
             btnClientes.MouseLeave += (s, e) => btnClientes.BackColor = corBotao;
             btnClientes.Click += (s, e) => { using (var frm = new FrmClientes()) frm.ShowDialog(); AtualizarDashboard(); };
 
+            Button btnUsuarios = new Button
+            {
+                Text = "Usuários",
+                Dock = DockStyle.Top,
+                Height = 60,
+                BackColor = corBotao,
+                ForeColor = Color.White,
+                Font = fontMenu,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Padding = new Padding(30, 0, 0, 0)
+            };
+            btnUsuarios.FlatAppearance.BorderSize = 0;
+            btnUsuarios.Enabled = SessaoService.EhAdmin; // APENAS ADMIN
+            btnUsuarios.MouseEnter += (s, e) => btnUsuarios.BackColor = corHover;
+            btnUsuarios.MouseLeave += (s, e) => btnUsuarios.BackColor = corBotao;
+            btnUsuarios.Click += (s, e) => { using (var frm = new FrmUsuarios()) frm.ShowDialog(); };
+
             Button btnSair = new Button
             {
                 Text = "Sair",
@@ -119,7 +138,7 @@ namespace GestaoChamados
                 Application.Exit();
             };
 
-            pnlMenu.Controls.AddRange(new Control[] { btnSair, btnChamados, btnAtendentes, btnClientes, lblTitulo });
+            pnlMenu.Controls.AddRange(new Control[] { btnSair, btnUsuarios, btnChamados, btnAtendentes, btnClientes, lblTitulo });
 
             pnlContent = new Panel
             {
