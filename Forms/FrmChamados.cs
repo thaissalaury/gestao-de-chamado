@@ -20,6 +20,7 @@ namespace GestaoChamados
         private TextBox txtBusca = null!;
         private ComboBox cbStatus = null!;
         private Button btnAtualizarStatus = null!;
+        private Button btnAbrir = null!;
 
         public FrmChamados()
         {
@@ -34,12 +35,11 @@ namespace GestaoChamados
             Text = "Gestão de Chamados";
             Size = new Size(1100, 750);
             StartPosition = FormStartPosition.CenterParent;
-            BackColor = ColorTranslator.FromHtml("#F5F7FA"); // Fundo principal
+            BackColor = ColorTranslator.FromHtml("#F5F7FA");
 
             Font fontLabel = new Font("Segoe UI", 10, FontStyle.Bold);
             Font fontInput = new Font("Segoe UI", 10, FontStyle.Regular);
 
-            // Título
             Label lblTitulo = new Label
             {
                 Text = "CENTRAL DE CHAMADOS",
@@ -51,7 +51,6 @@ namespace GestaoChamados
                 Padding = new Padding(20, 0, 0, 0)
             };
 
-            // Painel Topo (Container dos Cards)
             Panel pnlTopContainer = new Panel
             {
                 Dock = DockStyle.Top,
@@ -60,7 +59,6 @@ namespace GestaoChamados
                 Padding = new Padding(20, 0, 20, 20)
             };
 
-            // Card Novo Chamado
             Panel pnlNovo = new Panel
             {
                 Width = 600,
@@ -70,7 +68,7 @@ namespace GestaoChamados
             };
 
             Label lblTituloNovo = new Label { Text = "ABRIR NOVO CHAMADO", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = ColorTranslator.FromHtml("#2563EB"), Location = new Point(20, 15), Width = 300 };
-            
+
             Label lblCliente = new Label { Text = "Cliente:", Location = new Point(20, 50), Width = 100, Font = fontLabel, ForeColor = Color.Gray };
             cbCliente = new ComboBox { Location = new Point(20, 75), Width = 250, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
 
@@ -80,26 +78,26 @@ namespace GestaoChamados
             Label lblDescricao = new Label { Text = "Descrição do Problema:", Location = new Point(20, 115), Width = 200, Font = fontLabel, ForeColor = Color.Gray };
             txtDescricao = new TextBox { Location = new Point(20, 140), Width = 400, Height = 70, Font = fontInput, Multiline = true, BorderStyle = BorderStyle.FixedSingle };
 
-            Button btnAbrir = new Button 
-            { 
-                Text = "Abrir Chamado", 
+            btnAbrir = new Button
+            {
+                Text = "Abrir Chamado",
                 Location = new Point(440, 140),
-                Width = 140, 
-                Height = 70, 
-                BackColor = ColorTranslator.FromHtml("#10B981"), 
+                Width = 140,
+                Height = 70,
+                BackColor = ColorTranslator.FromHtml("#10B981"),
                 ForeColor = Color.White,
                 Font = new Font("Segoe UI", 10, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
             btnAbrir.FlatAppearance.BorderSize = 0;
+            btnAbrir.Enabled = SessaoService.PodeEscrever; // RBAC
             btnAbrir.MouseEnter += (s, e) => btnAbrir.BackColor = ColorTranslator.FromHtml("#059669");
             btnAbrir.MouseLeave += (s, e) => btnAbrir.BackColor = ColorTranslator.FromHtml("#10B981");
             btnAbrir.Click += BtnAbrir_Click;
 
             pnlNovo.Controls.AddRange(new Control[] { lblTituloNovo, lblCliente, cbCliente, lblAtendente, cbAtendente, lblDescricao, txtDescricao, btnAbrir });
 
-            // Card Gerenciar / Filtro
             Panel pnlGerenciar = new Panel
             {
                 Width = 380,
@@ -115,22 +113,23 @@ namespace GestaoChamados
             txtBusca.TextChanged += (s, e) => FiltrarChamados();
 
             Label lblStatus = new Label { Text = "Alterar Status:", Location = new Point(20, 115), Width = 150, Font = fontLabel, ForeColor = Color.Gray };
-5            cbStatus = new ComboBox { Location = new Point(20, 140), Width = 200, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
+            cbStatus = new ComboBox { Location = new Point(20, 140), Width = 200, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
             cbStatus.DataSource = Enum.GetValues(typeof(StatusChamado));
 
-            btnAtualizarStatus = new Button 
-            { 
-                Text = "Atualizar", 
-                Location = new Point(240, 140), 
-                Width = 120, 
-                Height = 28, 
-                BackColor = ColorTranslator.FromHtml("#2563EB"), 
+            btnAtualizarStatus = new Button
+            {
+                Text = "Atualizar",
+                Location = new Point(240, 140),
+                Width = 120,
+                Height = 28,
+                BackColor = ColorTranslator.FromHtml("#2563EB"),
                 ForeColor = Color.White,
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
             btnAtualizarStatus.FlatAppearance.BorderSize = 0;
+            btnAtualizarStatus.Enabled = SessaoService.PodeEscrever; // RBAC
             btnAtualizarStatus.MouseEnter += (s, e) => btnAtualizarStatus.BackColor = ColorTranslator.FromHtml("#3B82F6");
             btnAtualizarStatus.MouseLeave += (s, e) => btnAtualizarStatus.BackColor = ColorTranslator.FromHtml("#2563EB");
             btnAtualizarStatus.Click += BtnAtualizarStatus_Click;
@@ -140,7 +139,6 @@ namespace GestaoChamados
             pnlTopContainer.Controls.Add(pnlNovo);
             pnlTopContainer.Controls.Add(pnlGerenciar);
 
-            // Container do Grid
             Panel pnlGridContainer = new Panel
             {
                 Dock = DockStyle.Fill,
@@ -148,10 +146,10 @@ namespace GestaoChamados
                 BackColor = Color.Transparent
             };
 
-            dgvChamados = new DataGridView 
-            { 
-                Dock = DockStyle.Fill, 
-                AllowUserToAddRows = false, 
+            dgvChamados = new DataGridView
+            {
+                Dock = DockStyle.Fill,
+                AllowUserToAddRows = false,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -163,14 +161,12 @@ namespace GestaoChamados
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
 
-            // Estilo do Cabeçalho
             dgvChamados.ColumnHeadersDefaultCellStyle.BackColor = ColorTranslator.FromHtml("#F8FAFC");
             dgvChamados.ColumnHeadersDefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#475569");
             dgvChamados.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             dgvChamados.ColumnHeadersDefaultCellStyle.Padding = new Padding(10);
             dgvChamados.ColumnHeadersHeight = 45;
 
-            // Estilo das Linhas
             dgvChamados.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Regular);
             dgvChamados.DefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#0F172A");
             dgvChamados.DefaultCellStyle.BackColor = Color.White;
@@ -186,7 +182,7 @@ namespace GestaoChamados
             dgvChamados.Columns.Add("Descricao", "Descrição");
             dgvChamados.Columns.Add("Status", "Status");
             dgvChamados.Columns.Add("Data", "Data Abertura");
-            
+
             var colId = dgvChamados.Columns["Id"];
             if (colId != null)
             {
@@ -200,7 +196,6 @@ namespace GestaoChamados
                 colStatus.Width = 150;
             }
 
-            // Formatação Condicional de Status
             dgvChamados.CellFormatting += DgvChamados_CellFormatting;
 
             pnlGridContainer.Controls.Add(dgvChamados);
@@ -214,27 +209,26 @@ namespace GestaoChamados
             if (column != null && column.Name == "Status" && e.Value != null)
             {
                 string status = e.Value.ToString() ?? string.Empty;
-                
-                // Configura fundo para ficar como uma "Tag"
+
                 e.CellStyle.ForeColor = Color.White;
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 e.CellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
 
                 if (status == "Aberto")
                 {
-                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#EF4444"); // Vermelho
+                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#EF4444");
                     e.CellStyle.SelectionBackColor = ColorTranslator.FromHtml("#EF4444");
                     e.Value = "ABERTO";
                 }
                 else if (status == "EmAndamento")
                 {
-                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#F59E0B"); // Laranja
-                    e.Value = "EM ANDAMENTO"; 
+                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#F59E0B");
+                    e.Value = "EM ANDAMENTO";
                     e.CellStyle.SelectionBackColor = ColorTranslator.FromHtml("#F59E0B");
                 }
                 else if (status == "Resolvido")
                 {
-                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#10B981"); // Verde
+                    e.CellStyle.BackColor = ColorTranslator.FromHtml("#10B981");
                     e.CellStyle.SelectionBackColor = ColorTranslator.FromHtml("#10B981");
                     e.Value = "RESOLVIDO";
                 }
