@@ -1,22 +1,26 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using GestaoChamados.Models;
+using GestaoChamados.Repositories;
+using GestaoChamados.Services;
 
 namespace GestaoChamados.Services
 {
     public class ChamadoService
     {
-        private static List<Chamado> chamados = DataPersistence.Load<Chamado>("chamados.json");
-        private static int proximoId = 1;
+        private readonly ChamadoRepository _chamadoRepository = new ChamadoRepository();
 
-        static ChamadoService()
+        private void GarantirPermissaoDeEscrita()
         {
-            if (chamados.Count > 0)
-            {
-                proximoId = chamados.Max(c => c.Id) + 1;
-            }
+            if (!SessaoService.PodeEscrever)
+                throw new UnauthorizedAccessException("Seu papel não permite realizar esta ação.");
         }
 
         public void Abrir(Cliente cliente, Atendente atendente, string descricao)
         {
+            GarantirPermissaoDeEscrita();
+
             if (cliente == null)
                 throw new ArgumentException("Cliente não pode ser nulo.");
 
@@ -27,7 +31,7 @@ namespace GestaoChamados.Services
                 throw new ArgumentException("Descrição do chamado não pode ser vazia.");
 
             var chamado = new Chamado(
-                proximoId++,
+                0,
                 cliente,
                 atendente,
                 descricao,
@@ -35,33 +39,35 @@ namespace GestaoChamados.Services
                 StatusChamado.Aberto
             );
 
-            chamados.Add(chamado);
-            DataPersistence.Save("chamados.json", chamados);
+            _chamadoRepository.Cadastrar(chamado);
         }
 
         public List<Chamado> Listar()
         {
-            return chamados.ToList();
+            return _chamadoRepository.Listar();
         }
 
         public List<Chamado> ListarAbertos()
         {
-            return chamados.Where(c => c.Status == StatusChamado.Aberto).ToList();
+            return _chamadoRepository.Listar()
+                .Where(c => c.Status == StatusChamado.Aberto)
+                .ToList();
         }
 
         public Chamado? BuscarPorId(int id)
         {
-            return chamados.FirstOrDefault(c => c.Id == id);
+            return _chamadoRepository.BuscarPorId(id);
         }
 
         public void AlterarStatus(int id, StatusChamado novoStatus)
         {
+            GarantirPermissaoDeEscrita();
+
             var chamado = BuscarPorId(id);
             if (chamado == null)
                 throw new ArgumentException("Chamado não encontrado.");
 
-            chamado.Status = novoStatus;
-            DataPersistence.Save("chamados.json", chamados);
+            _chamadoRepository.AlterarStatus(id, novoStatus);
         }
     }
 }
