@@ -115,7 +115,7 @@ namespace GestaoChamados
             txtBusca.TextChanged += (s, e) => FiltrarChamados();
 
             Label lblStatus = new Label { Text = "Alterar Status:", Location = new Point(20, 115), Width = 150, Font = fontLabel, ForeColor = Color.Gray };
-            cbStatus = new ComboBox { Location = new Point(20, 140), Width = 200, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
+5            cbStatus = new ComboBox { Location = new Point(20, 140), Width = 200, Font = fontInput, DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
             cbStatus.DataSource = Enum.GetValues(typeof(StatusChamado));
 
             btnAtualizarStatus = new Button 
