@@ -8,7 +8,46 @@ namespace GestaoChamados.Repositories
 {
     public class UsuarioRepository
     {
+        public List<Usuario> Listar()
+        {
+            var usuarios = new List<Usuario>();
+            using (var connection = new SqliteConnection(ConexaoBanco.ConnectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT id, nome, login, senha_hash, papel_id FROM usuarios";
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        usuarios.Add(new Usuario(
+                            reader.GetInt32(0),
+                            reader.GetString(1),
+                            reader.GetString(2),
+                            reader.GetString(3),
+                            reader.GetInt32(4)
+                        ));
+                    }
+                }
+            }
+            return usuarios;
+        }
+
+        public void Excluir(int id)
+        {
+            using (var connection = new SqliteConnection(ConexaoBanco.ConnectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM usuarios WHERE id = @id";
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+            }
+        }
+
         public Usuario? BuscarPorLogin(string login)
+
         {
             using (var connection = new SqliteConnection(ConexaoBanco.ConnectionString))
             {
