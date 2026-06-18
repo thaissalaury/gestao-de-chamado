@@ -12,6 +12,7 @@ namespace GestaoChamados
         private DataGridView dgvClientes = null!;
         private TextBox txtNome = null!;
         private TextBox txtContato = null!;
+        private Button btnAdicionar = null!;
 
         public FrmClientes()
         {
@@ -24,9 +25,8 @@ namespace GestaoChamados
             Text = "Cadastro de Clientes";
             Size = new Size(800, 600);
             StartPosition = FormStartPosition.CenterParent;
-            BackColor = ColorTranslator.FromHtml("#F5F7FA"); // Fundo principal
+            BackColor = ColorTranslator.FromHtml("#F5F7FA");
 
-            // Título do Formulário
             Label lblTitulo = new Label
             {
                 Text = "GERENCIAMENTO DE CLIENTES",
@@ -38,16 +38,14 @@ namespace GestaoChamados
                 Padding = new Padding(20, 0, 0, 0)
             };
 
-            // Card de Cadastro
-            Panel pnlCard = new Panel 
-            { 
-                Dock = DockStyle.Top, 
-                Height = 160, 
+            Panel pnlCard = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 160,
                 BackColor = Color.White,
                 Padding = new Padding(20)
             };
 
-            // Adiciona uma margem ao redor do card usando um Panel contêiner
             Panel pnlCardContainer = new Panel
             {
                 Dock = DockStyle.Top,
@@ -55,7 +53,7 @@ namespace GestaoChamados
                 Padding = new Padding(20, 0, 20, 20),
                 BackColor = Color.Transparent
             };
-            
+
             pnlCardContainer.Controls.Add(pnlCard);
 
             Font fontLabel = new Font("Segoe UI", 10, FontStyle.Bold);
@@ -67,43 +65,43 @@ namespace GestaoChamados
             Label lblContato = new Label { Text = "Contato (E-mail ou Telefone):", Location = new Point(400, 20), Width = 250, Font = fontLabel, ForeColor = Color.Gray };
             txtContato = new TextBox { Location = new Point(400, 45), Width = 300, Font = fontInput, BorderStyle = BorderStyle.FixedSingle };
 
-            Button btnAdicionar = new Button 
-            { 
-                Text = "Adicionar Cliente", 
-                Location = new Point(20, 100), 
-                Width = 150, 
-                Height = 40, 
-                BackColor = ColorTranslator.FromHtml("#10B981"), 
+            btnAdicionar = new Button
+            {
+                Text = "Adicionar Cliente",
+                Location = new Point(20, 100),
+                Width = 150,
+                Height = 40,
+                BackColor = ColorTranslator.FromHtml("#10B981"),
                 ForeColor = Color.White,
                 Font = new Font("Segoe UI", 10, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
             btnAdicionar.FlatAppearance.BorderSize = 0;
-            btnAdicionar.MouseEnter += (s, e) => btnAdicionar.BackColor = ColorTranslator.FromHtml("#059669"); // Hover Sucesso
+            btnAdicionar.Enabled = SessaoService.PodeEscrever; // RBAC
+            btnAdicionar.MouseEnter += (s, e) => btnAdicionar.BackColor = ColorTranslator.FromHtml("#059669");
             btnAdicionar.MouseLeave += (s, e) => btnAdicionar.BackColor = ColorTranslator.FromHtml("#10B981");
             btnAdicionar.Click += BtnAdicionar_Click;
 
-            Button btnLimpar = new Button 
-            { 
-                Text = "Limpar", 
-                Location = new Point(190, 100), 
-                Width = 100, 
-                Height = 40, 
-                BackColor = ColorTranslator.FromHtml("#64748B"), 
+            Button btnLimpar = new Button
+            {
+                Text = "Limpar",
+                Location = new Point(190, 100),
+                Width = 100,
+                Height = 40,
+                BackColor = ColorTranslator.FromHtml("#64748B"),
                 ForeColor = Color.White,
                 Font = new Font("Segoe UI", 10, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
             btnLimpar.FlatAppearance.BorderSize = 0;
-            btnLimpar.MouseEnter += (s, e) => btnLimpar.BackColor = ColorTranslator.FromHtml("#475569"); // Hover Cinza
+            btnLimpar.MouseEnter += (s, e) => btnLimpar.BackColor = ColorTranslator.FromHtml("#475569");
             btnLimpar.MouseLeave += (s, e) => btnLimpar.BackColor = ColorTranslator.FromHtml("#64748B");
             btnLimpar.Click += (s, e) => { txtNome.Clear(); txtContato.Clear(); };
 
             pnlCard.Controls.AddRange(new Control[] { lblNome, txtNome, lblContato, txtContato, btnAdicionar, btnLimpar });
 
-            // Grid de Clientes
             Panel pnlGridContainer = new Panel
             {
                 Dock = DockStyle.Fill,
@@ -111,10 +109,10 @@ namespace GestaoChamados
                 BackColor = Color.Transparent
             };
 
-            dgvClientes = new DataGridView 
-            { 
-                Dock = DockStyle.Fill, 
-                AllowUserToAddRows = false, 
+            dgvClientes = new DataGridView
+            {
+                Dock = DockStyle.Fill,
+                AllowUserToAddRows = false,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -126,14 +124,12 @@ namespace GestaoChamados
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
 
-            // Estilo do Cabeçalho
             dgvClientes.ColumnHeadersDefaultCellStyle.BackColor = ColorTranslator.FromHtml("#F8FAFC");
             dgvClientes.ColumnHeadersDefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#475569");
             dgvClientes.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             dgvClientes.ColumnHeadersDefaultCellStyle.Padding = new Padding(10);
             dgvClientes.ColumnHeadersHeight = 45;
 
-            // Estilo das Linhas
             dgvClientes.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Regular);
             dgvClientes.DefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#0F172A");
             dgvClientes.DefaultCellStyle.BackColor = Color.White;
@@ -146,8 +142,7 @@ namespace GestaoChamados
             dgvClientes.Columns.Add("Id", "ID");
             dgvClientes.Columns.Add("Nome", "Nome do Cliente");
             dgvClientes.Columns.Add("Contato", "Contato");
-            
-            // Ajustar largura da coluna ID
+
             var colId = dgvClientes.Columns["Id"];
             if (colId != null)
             {
