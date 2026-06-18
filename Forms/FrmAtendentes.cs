@@ -131,7 +131,7 @@ namespace GestaoChamados
             dgvAtendentes.ColumnHeadersHeight = 45;
 
             dgvAtendentes.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Regular);
-            dgvAtendentes.DefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#0F1 own");
+            dgvAtendentes.DefaultCellStyle.ForeColor = ColorTranslator.FromHtml("#0F172A");
             dgvAtendentes.DefaultCellStyle.BackColor = Color.White;
             dgvAtendentes.DefaultCellStyle.SelectionBackColor = ColorTranslator.FromHtml("#E2E8F0");
             dgvAtendentes.DefaultCellStyle.SelectionForeColor = ColorTranslator.FromHtml("#0F172A");
