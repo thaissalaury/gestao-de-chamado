@@ -1,5 +1,6 @@
-﻿using System.Windows.Forms;
-using GestaoChamados;
+using System;
+using System.Windows.Forms;
+using GestaoChamados.Data;
 
 namespace GestaoChamados
 {
@@ -9,7 +10,13 @@ namespace GestaoChamados
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.Run(new FrmPrincipal());
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            // Inicializa o Banco de Dados (Tabelas e Admin)
+            ConexaoBanco.InicializarBanco();
+
+            // Inicia pelo Login
+            Application.Run(new FrmLogin());
         }
     }
 }
