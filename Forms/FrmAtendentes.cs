@@ -13,6 +13,7 @@ namespace GestaoChamados
         private TextBox txtNome = null!;
         private TextBox txtSetor = null!;
         private Button btnAdicionar = null!;
+        private Button btnExcluir = null!;
 
         public FrmAtendentes()
         {
@@ -53,7 +54,6 @@ namespace GestaoChamados
                 Padding = new Padding(20, 0, 20, 20),
                 BackColor = Color.Transparent
             };
-
             pnlCardContainer.Controls.Add(pnlCard);
 
             Font fontLabel = new Font("Segoe UI", 10, FontStyle.Bold);
@@ -83,10 +83,28 @@ namespace GestaoChamados
             btnAdicionar.MouseLeave += (s, e) => btnAdicionar.BackColor = ColorTranslator.FromHtml("#10B981");
             btnAdicionar.Click += BtnAdicionar_Click;
 
+            btnExcluir = new Button
+            {
+                Text = "Excluir Selecionado",
+                Location = new Point(210, 100),
+                Width = 150,
+                Height = 40,
+                BackColor = ColorTranslator.FromHtml("#EF4444"),
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnExcluir.FlatAppearance.BorderSize = 0;
+            btnExcluir.Enabled = SessaoService.PodeEscrever; // RBAC
+            btnExcluir.MouseEnter += (s, e) => btnExcluir.BackColor = ColorTranslator.FromHtml("#B91C1C");
+            btnExcluir.MouseLeave += (s, e) => btnExcluir.BackColor = ColorTranslator.FromHtml("#EF4444");
+            btnExcluir.Click += BtnExcluir_Click;
+
             Button btnLimpar = new Button
             {
                 Text = "Limpar",
-                Location = new Point(210, 100),
+                Location = new Point(380, 100),
                 Width = 100,
                 Height = 40,
                 BackColor = ColorTranslator.FromHtml("#64748B"),
@@ -100,7 +118,7 @@ namespace GestaoChamados
             btnLimpar.MouseLeave += (s, e) => btnLimpar.BackColor = ColorTranslator.FromHtml("#64748B");
             btnLimpar.Click += (s, e) => { txtNome.Clear(); txtSetor.Clear(); };
 
-            pnlCard.Controls.AddRange(new Control[] { lblNome, txtNome, lblSetor, txtSetor, btnAdicionar, btnLimpar });
+            pnlCard.Controls.AddRange(new Control[] { lblNome, txtNome, lblSetor, txtSetor, btnAdicionar, btnExcluir, btnLimpar });
 
             Panel pnlGridContainer = new Panel
             {
@@ -185,6 +203,32 @@ namespace GestaoChamados
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao cadastrar atendente: " + ex.Message, "Erro do Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnExcluir_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                var row = dgvAtendentes.CurrentRow;
+                if (row == null)
+                {
+                    MessageBox.Show("Selecione um atendente na lista!", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int id = Convert.ToInt32(row.Cells[0].Value);
+
+                if (MessageBox.Show("Deseja realmente excluir este atendente?", "Confirmar Exclusão", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    service.Excluir(id);
+                    MessageBox.Show("Atendente removido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CarregarAtendentes();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao excluir atendente: " + ex.Message, "Erro do Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
