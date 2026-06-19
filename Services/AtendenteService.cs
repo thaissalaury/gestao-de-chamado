@@ -36,7 +36,14 @@ namespace GestaoChamados.Services
             return _atendenteRepository.Listar();
         }
 
+        public void Excluir(int id)
+        {
+            GarantirPermissaoDeEscrita();
+            _atendenteRepository.Excluir(id);
+        }
+
         public Atendente? BuscarPorId(int id)
+
         {
             return _atendenteRepository.BuscarPorId(id);
         }
