@@ -109,5 +109,29 @@ namespace GestaoChamados.Repositories
                 command.ExecuteNonQuery();
             }
         }
+
+        public int ContarPorCliente(int clienteId)
+        {
+            using (var connection = new SqliteConnection(ConexaoBanco.ConnectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT COUNT(*) FROM chamados WHERE cliente_id = @id";
+                command.Parameters.AddWithValue("@id", clienteId);
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+        }
+
+        public int ContarPorAtendente(int atendenteId)
+        {
+            using (var connection = new SqliteConnection(ConexaoBanco.ConnectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT COUNT(*) FROM chamados WHERE atendente_id = @id";
+                command.Parameters.AddWithValue("@id", atendenteId);
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+        }
     }
 }
