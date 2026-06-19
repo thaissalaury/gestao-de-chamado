@@ -32,7 +32,20 @@ namespace GestaoChamados.Repositories
             return atendentes;
         }
 
+        public void Excluir(int id)
+        {
+            using (var connection = new SqliteConnection(ConexaoBanco.ConnectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM atendentes WHERE id = @id";
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+            }
+        }
+
         public Atendente? BuscarPorId(int id)
+
         {
             using (var connection = new SqliteConnection(ConexaoBanco.ConnectionString))
             {
