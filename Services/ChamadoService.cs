@@ -69,5 +69,11 @@ namespace GestaoChamados.Services
 
             _chamadoRepository.AlterarStatus(id, novoStatus);
         }
+
+        public void Excluir(int id)
+        {
+            GarantirPermissaoDeEscrita();
+            _chamadoRepository.Excluir(id);
+        }
     }
 }
