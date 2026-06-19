@@ -176,7 +176,7 @@ namespace GestaoChamados
                 string nome = txtNome.Text.Trim();
                 string login = txtLogin.Text.Trim();
                 string senha = txtSenha.Text.Trim();
-                int papelId = (int)cbPapel.SelectedValue;
+                int papelId = (int)(cbPapel.SelectedValue ?? 0);
 
                 service.Cadastrar(nome, login, senha, papelId);
                 MessageBox.Show("Usuário cadastrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
