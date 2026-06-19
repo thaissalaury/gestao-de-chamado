@@ -21,6 +21,7 @@ namespace GestaoChamados
         private ComboBox cbStatus = null!;
         private Button btnAtualizarStatus = null!;
         private Button btnAbrir = null!;
+        private Button btnExcluir = null!;
 
         public FrmChamados()
         {
@@ -134,7 +135,25 @@ namespace GestaoChamados
             btnAtualizarStatus.MouseLeave += (s, e) => btnAtualizarStatus.BackColor = ColorTranslator.FromHtml("#2563EB");
             btnAtualizarStatus.Click += BtnAtualizarStatus_Click;
 
-            pnlGerenciar.Controls.AddRange(new Control[] { lblTituloGerenciar, lblBusca, txtBusca, lblStatus, cbStatus, btnAtualizarStatus });
+            btnExcluir = new Button
+            {
+                Text = "Excluir Chamado",
+                Location = new Point(240, 172),
+                Width = 120,
+                Height = 28,
+                BackColor = ColorTranslator.FromHtml("#EF4444"),
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnExcluir.FlatAppearance.BorderSize = 0;
+            btnExcluir.Enabled = SessaoService.PodeEscrever; // RBAC
+            btnExcluir.MouseEnter += (s, e) => btnExcluir.BackColor = ColorTranslator.FromHtml("#B91C1C");
+            btnExcluir.MouseLeave += (s, e) => btnExcluir.BackColor = ColorTranslator.FromHtml("#EF4444");
+            btnExcluir.Click += BtnExcluir_Click;
+
+            pnlGerenciar.Controls.AddRange(new Control[] { lblTituloGerenciar, lblBusca, txtBusca, lblStatus, cbStatus, btnAtualizarStatus, btnExcluir });
 
             pnlTopContainer.Controls.Add(pnlNovo);
             pnlTopContainer.Controls.Add(pnlGerenciar);
@@ -318,6 +337,37 @@ namespace GestaoChamados
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao abrir chamado: " + ex.Message, "Erro do Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnExcluir_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                var currentRow = dgvChamados.CurrentRow;
+                if (currentRow == null)
+                {
+                    MessageBox.Show("Selecione um chamado na lista!", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var cellValue = currentRow.Cells[0].Value;
+                if (cellValue == null || !int.TryParse(cellValue.ToString(), out int id))
+                {
+                    MessageBox.Show("Falha ao ler o ID do chamado selecionado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (MessageBox.Show("Deseja realmente excluir este chamado?", "Confirmar Exclusão", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    chamadoService.Excluir(id);
+                    MessageBox.Show("Chamado removido com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CarregarChamados();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao excluir chamado: " + ex.Message, "Erro do Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
