@@ -110,6 +110,18 @@ namespace GestaoChamados.Repositories
             }
         }
 
+        public void Excluir(int id)
+        {
+            using (var connection = new SqliteConnection(ConexaoBanco.ConnectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM chamados WHERE id = @id";
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+            }
+        }
+
         public int ContarPorCliente(int clienteId)
         {
             using (var connection = new SqliteConnection(ConexaoBanco.ConnectionString))
