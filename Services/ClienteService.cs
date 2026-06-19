@@ -10,6 +10,7 @@ namespace GestaoChamados.Services
     public class ClienteService
     {
         private readonly ClienteRepository _clienteRepository = new ClienteRepository();
+        private readonly ChamadoRepository _chamadoRepository = new ChamadoRepository();
 
         private void GarantirPermissaoDeEscrita()
         {
@@ -36,16 +37,21 @@ namespace GestaoChamados.Services
             return _clienteRepository.Listar();
         }
 
+        public Cliente? BuscarPorId(int id)
+        {
+            return _clienteRepository.BuscarPorId(id);
+        }
+
         public void Excluir(int id)
         {
             GarantirPermissaoDeEscrita();
+
+            if (_chamadoRepository.ContarPorCliente(id) > 0)
+            {
+                throw new InvalidOperationException("Não é possível excluir este cliente pois existem chamados vinculados a ele.");
+            }
+
             _clienteRepository.Excluir(id);
-        }
-
-        public Cliente? BuscarPorId(int id)
-
-        {
-            return _clienteRepository.BuscarPorId(id);
         }
     }
 }
