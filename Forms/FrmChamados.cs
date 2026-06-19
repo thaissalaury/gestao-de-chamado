@@ -92,7 +92,7 @@ namespace GestaoChamados
                 Cursor = Cursors.Hand
             };
             btnAbrir.FlatAppearance.BorderSize = 0;
-            btnAbrir.Enabled = SessaoService.PodeEscrever; // RBAC
+            btnAbrir.Enabled = true; // Todos os papéis podem abrir chamados
             btnAbrir.MouseEnter += (s, e) => btnAbrir.BackColor = ColorTranslator.FromHtml("#059669");
             btnAbrir.MouseLeave += (s, e) => btnAbrir.BackColor = ColorTranslator.FromHtml("#10B981");
             btnAbrir.Click += BtnAbrir_Click;
@@ -148,7 +148,7 @@ namespace GestaoChamados
                 Cursor = Cursors.Hand
             };
             btnExcluir.FlatAppearance.BorderSize = 0;
-            btnExcluir.Enabled = SessaoService.PodeEscrever; // RBAC
+            btnExcluir.Enabled = SessaoService.EhAdmin; // Apenas Admin pode excluir chamados
             btnExcluir.MouseEnter += (s, e) => btnExcluir.BackColor = ColorTranslator.FromHtml("#B91C1C");
             btnExcluir.MouseLeave += (s, e) => btnExcluir.BackColor = ColorTranslator.FromHtml("#EF4444");
             btnExcluir.Click += BtnExcluir_Click;

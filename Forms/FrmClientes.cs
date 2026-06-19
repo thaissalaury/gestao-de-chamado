@@ -96,7 +96,7 @@ namespace GestaoChamados
                 Cursor = Cursors.Hand
             };
             btnExcluir.FlatAppearance.BorderSize = 0;
-            btnExcluir.Enabled = SessaoService.PodeEscrever; // RBAC
+            btnExcluir.Enabled = SessaoService.EhAdmin; // Apenas Admin pode excluir clientes
             btnExcluir.MouseEnter += (s, e) => btnExcluir.BackColor = ColorTranslator.FromHtml("#B91C1C");
             btnExcluir.MouseLeave += (s, e) => btnExcluir.BackColor = ColorTranslator.FromHtml("#EF4444");
             btnExcluir.Click += BtnExcluir_Click;

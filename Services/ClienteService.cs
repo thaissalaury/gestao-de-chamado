@@ -18,6 +18,12 @@ namespace GestaoChamados.Services
                 throw new UnauthorizedAccessException("Seu papel não permite realizar esta ação.");
         }
 
+        private void GarantirPermissaoAdmin()
+        {
+            if (!SessaoService.EhAdmin)
+                throw new UnauthorizedAccessException("Apenas administradores podem realizar esta ação.");
+        }
+
         public void Cadastrar(string nome, string contato)
         {
             GarantirPermissaoDeEscrita();
@@ -44,7 +50,7 @@ namespace GestaoChamados.Services
 
         public void Excluir(int id)
         {
-            GarantirPermissaoDeEscrita();
+            GarantirPermissaoAdmin();
 
             if (_chamadoRepository.ContarPorCliente(id) > 0)
             {

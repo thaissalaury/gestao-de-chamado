@@ -17,10 +17,15 @@ namespace GestaoChamados.Services
                 throw new UnauthorizedAccessException("Seu papel não permite realizar esta ação.");
         }
 
+        private void GarantirPermissaoAdmin()
+        {
+            if (!SessaoService.EhAdmin)
+                throw new UnauthorizedAccessException("Apenas administradores podem realizar esta ação.");
+        }
+
         public void Abrir(Cliente cliente, Atendente atendente, string descricao)
         {
-            GarantirPermissaoDeEscrita();
-
+            // Qualquer usuário autenticado (incluindo Visualizador) pode abrir chamados
             if (cliente == null)
                 throw new ArgumentException("Cliente não pode ser nulo.");
 
@@ -72,7 +77,7 @@ namespace GestaoChamados.Services
 
         public void Excluir(int id)
         {
-            GarantirPermissaoDeEscrita();
+            GarantirPermissaoAdmin();
             _chamadoRepository.Excluir(id);
         }
     }
